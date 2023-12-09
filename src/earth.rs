@@ -28,7 +28,8 @@ fn spawn(
                 .unwrap(),
             ),
             material: materials.add(StandardMaterial {
-                base_color: Color::rgb(0.1, 0.1, 0.7),
+                base_color: Color::rgba(0.1, 0.1, 0.7, 0.5),
+                alpha_mode: AlphaMode::Blend,
                 ..default()
             }),
             transform: Transform::from_xyz(0.0, 0.0, 0.0),

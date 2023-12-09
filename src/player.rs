@@ -2,7 +2,7 @@ use bevy::prelude::*;
 
 use crate::earth::EARTH_RADIUS;
 
-const PLAYER_RADIUS: f32 = EARTH_RADIUS / 20.0;
+const PLAYER_RADIUS: f32 = 20.0;
 const PLAYER_ROTATION_SPEED: f32 = 1.0;
 const PLAYER_MOVEMENT_SPEED: f32 = 0.5;
 
@@ -18,61 +18,16 @@ impl Plugin for PlayerPlugin {
     }
 }
 
-fn spawn(
-    mut commands: Commands,
-    mut meshes: ResMut<Assets<Mesh>>,
-    mut materials: ResMut<Assets<StandardMaterial>>,
-) {
+fn spawn(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands.spawn((
-        PbrBundle {
-            mesh: meshes.add(
-                Mesh::try_from(shape::Icosphere {
-                    radius: PLAYER_RADIUS,
-                    subdivisions: (PLAYER_RADIUS / 2.0) as usize,
-                })
-                .unwrap(),
-            ),
-            material: materials.add(StandardMaterial {
-                base_color: Color::rgb(0.9, 0.9, 0.1),
-                ..default()
-            }),
-            transform: Transform::from_xyz(0.0, EARTH_RADIUS + PLAYER_RADIUS, 0.0),
+        SceneBundle {
+            scene: asset_server.load("models/player.glb#Scene0"),
+            transform: Transform::from_xyz(0.0, EARTH_RADIUS + PLAYER_RADIUS, 0.0)
+                .with_scale(Vec3::splat(10.0)),
             ..default()
         },
         Player,
     ));
-
-    commands.spawn(PbrBundle {
-        mesh: meshes.add(
-            Mesh::try_from(shape::Icosphere {
-                radius: PLAYER_RADIUS,
-                subdivisions: (PLAYER_RADIUS / 2.0) as usize,
-            })
-            .unwrap(),
-        ),
-        material: materials.add(StandardMaterial {
-            base_color: Color::rgb(0.1, 0.7, 0.1),
-            ..default()
-        }),
-        transform: Transform::from_xyz(EARTH_RADIUS + PLAYER_RADIUS, 0.0, 0.0),
-        ..default()
-    });
-
-    commands.spawn(PbrBundle {
-        mesh: meshes.add(
-            Mesh::try_from(shape::Icosphere {
-                radius: PLAYER_RADIUS,
-                subdivisions: (PLAYER_RADIUS / 2.0) as usize,
-            })
-            .unwrap(),
-        ),
-        material: materials.add(StandardMaterial {
-            base_color: Color::rgb(0.1, 0.7, 0.1),
-            ..default()
-        }),
-        transform: Transform::from_xyz(0.0, 0.0, EARTH_RADIUS + PLAYER_RADIUS),
-        ..default()
-    });
 }
 
 fn movement(

@@ -2,10 +2,12 @@ use bevy::prelude::*;
 
 mod camera;
 mod earth;
+mod ghost;
 mod player;
 
 use crate::camera::MainCameraPlugin;
 use crate::earth::EarthPlugin;
+use crate::ghost::GhostPlugin;
 use crate::player::PlayerPlugin;
 
 fn main() {
@@ -16,6 +18,7 @@ fn main() {
         .add_plugins(MainCameraPlugin)
         .add_plugins(PlayerPlugin)
         .add_plugins(EarthPlugin)
+        .add_plugins(GhostPlugin)
         .run();
 }
 

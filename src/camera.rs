@@ -2,7 +2,7 @@ use bevy::prelude::*;
 
 use crate::player::Player;
 
-const CAMERA_DISTANCE: f32 = 350.0;
+const CAMERA_DISTANCE: f32 = 300.0;
 
 #[derive(Component)]
 pub struct MainCamera;
