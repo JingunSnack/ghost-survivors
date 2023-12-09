@@ -1,10 +1,12 @@
 use bevy::prelude::*;
 
 mod camera;
+mod earth;
+mod player;
 
 use crate::camera::MainCameraPlugin;
-
-const EARTH_RADIUS: f32 = 100.0;
+use crate::earth::EarthPlugin;
+use crate::player::PlayerPlugin;
 
 fn main() {
     App::new()
@@ -12,32 +14,14 @@ fn main() {
         .add_plugins(DefaultPlugins)
         .add_systems(Startup, setup)
         .add_plugins(MainCameraPlugin)
+        .add_plugins(PlayerPlugin)
+        .add_plugins(EarthPlugin)
         .run();
 }
 
-fn setup(
-    mut commands: Commands,
-    mut meshes: ResMut<Assets<Mesh>>,
-    mut materials: ResMut<Assets<StandardMaterial>>,
-) {
+fn setup(mut commands: Commands) {
     commands.insert_resource(AmbientLight {
         color: Color::WHITE,
         brightness: 0.5,
-    });
-
-    commands.spawn(PbrBundle {
-        mesh: meshes.add(
-            Mesh::try_from(shape::Icosphere {
-                radius: EARTH_RADIUS,
-                subdivisions: 50,
-            })
-            .unwrap(),
-        ),
-        material: materials.add(StandardMaterial {
-            base_color: Color::rgb(0.1, 0.1, 0.7),
-            ..default()
-        }),
-        transform: Transform::from_xyz(0.0, 0.0, 0.0),
-        ..default()
     });
 }

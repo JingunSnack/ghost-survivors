@@ -1,6 +1,8 @@
 use bevy::prelude::*;
 
-const CAMERA_DISTANCE: f32 = 400.0;
+use crate::player::Player;
+
+const CAMERA_DISTANCE: f32 = 350.0;
 
 #[derive(Component)]
 pub struct MainCamera;
@@ -9,7 +11,8 @@ pub struct MainCameraPlugin;
 
 impl Plugin for MainCameraPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Startup, spawn);
+        app.add_systems(Startup, spawn)
+            .add_systems(Update, follow_player);
     }
 }
 
@@ -26,4 +29,20 @@ fn spawn(mut commands: Commands) {
         },
         MainCamera,
     ));
+}
+
+fn follow_player(
+    mut camera_query: Query<&mut Transform, With<MainCamera>>,
+    player_query: Query<&Transform, (With<Player>, Without<MainCamera>)>,
+) {
+    if let Ok(player_transform) = player_query.get_single() {
+        if let Ok(mut camera_transform) = camera_query.get_single_mut() {
+            let camera_up = player_transform.translation.normalize();
+
+            camera_transform.translation =
+                camera_up * CAMERA_DISTANCE - player_transform.forward() * 20.0;
+
+            camera_transform.look_at(player_transform.translation, camera_up);
+        }
+    }
 }
