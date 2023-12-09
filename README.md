@@ -1,1 +1,1 @@
-# ghost-survivors
+# Ghost Survivors
