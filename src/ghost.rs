@@ -11,13 +11,16 @@ const MAX_DISTANCE_FROM_PLAYER: f32 = 100.0;
 const SPAWN_INTERVAL: u64 = 1;
 
 #[derive(Component)]
-pub struct Ghost;
+pub struct Ghost {
+    pub health: f32,
+}
 
 #[derive(Component)]
 pub struct HitByBullet {
     pub bullet_direction: Vec3,
     pub elapsed_time: f32,
     pub lifespan: f32,
+    pub is_lethal: bool,
 }
 
 pub struct GhostPlugin;
@@ -69,7 +72,7 @@ fn spawn(
                     transform: Transform::from_translation(position).with_scale(Vec3::splat(20.0)),
                     ..default()
                 },
-                Ghost,
+                Ghost { health: 100.0 },
             ));
         }
     }
@@ -102,7 +105,7 @@ fn hit_by_weapon(
     mut query: Query<(&mut Transform, &mut Visibility, &HitByBullet), With<HitByBullet>>,
 ) {
     for (mut transform, mut visibility, hit_by_weapon) in query.iter_mut() {
-        transform.translation += hit_by_weapon.bullet_direction * time.delta_seconds();
+        transform.translation += hit_by_weapon.bullet_direction * 2.0 * time.delta_seconds();
 
         match *visibility {
             Visibility::Hidden => *visibility = Visibility::Visible,
@@ -114,13 +117,18 @@ fn hit_by_weapon(
 
 fn despawn_when_hit_by_weapon(
     mut commands: Commands,
-    mut query: Query<(Entity, &mut HitByBullet), With<HitByBullet>>,
+    mut query: Query<(Entity, &mut Visibility, &mut HitByBullet), With<HitByBullet>>,
     time: Res<Time>,
 ) {
-    for (entity, mut hit_by_weapon) in &mut query {
+    for (entity, mut visibility, mut hit_by_weapon) in &mut query {
         hit_by_weapon.elapsed_time += time.delta_seconds();
         if hit_by_weapon.elapsed_time >= hit_by_weapon.lifespan {
-            commands.entity(entity).despawn_recursive();
+            if hit_by_weapon.is_lethal {
+                commands.entity(entity).despawn_recursive();
+            } else {
+                commands.entity(entity).remove::<HitByBullet>();
+                *visibility = Visibility::Visible;
+            }
         }
     }
 }

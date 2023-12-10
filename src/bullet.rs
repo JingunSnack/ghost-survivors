@@ -1,12 +1,12 @@
 use bevy::prelude::*;
 
-use crate::ghost::{Ghost, HitByBullet};
+use crate::enemy::{Enemy, HitByBullet};
 use crate::player::Player;
 
-const HIT_RANGE: f32 = 20.0;
 const HIT_BY_WEAPON_LIFESPAN: f32 = 0.25;
 const BULLET_LIFESPAN: f32 = 10.0;
 const BULLET_MOVEMENT_SPEED: f32 = 2.5;
+const BULLET_DAMAGE: f32 = 100.0;
 
 #[derive(Component)]
 pub struct Bullet {
@@ -78,20 +78,26 @@ fn translate(mut bullet_query: Query<&mut Transform, With<Bullet>>, time: Res<Ti
 fn hit(
     mut commands: Commands,
     weapon_query: Query<&Transform, With<Bullet>>,
-    enemy_query: Query<(Entity, &Transform), (With<Ghost>, Without<Bullet>, Without<HitByBullet>)>,
+    mut enemy_query: Query<
+        (Entity, &Transform, &mut Enemy),
+        (With<Enemy>, Without<Bullet>, Without<HitByBullet>),
+    >,
 ) {
-    for (enemy_entity, enemy_transform) in &enemy_query {
+    for (enemy_entity, enemy_transform, mut enemy) in &mut enemy_query {
         for weapon_transform in &weapon_query {
             if enemy_transform
                 .translation
                 .distance(weapon_transform.translation)
-                < HIT_RANGE
+                < enemy.radius
             {
                 let direction = enemy_transform.translation - weapon_transform.translation;
+                enemy.health -= BULLET_DAMAGE;
+
                 commands.entity(enemy_entity).insert(HitByBullet {
                     bullet_direction: direction,
                     elapsed_time: 0.0,
                     lifespan: HIT_BY_WEAPON_LIFESPAN,
+                    is_lethal: enemy.health <= 0.0,
                 });
                 break;
             }

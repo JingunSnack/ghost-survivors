@@ -1,16 +1,20 @@
 use bevy::prelude::*;
 
+use bullet::BulletPlugin;
+use camera::MainCameraPlugin;
+use earth::EarthPlugin;
+use enemy::dragon::DragonPlugin;
+use enemy::ghost::GhostPlugin;
+use enemy::knight::KnightPlugin;
+use enemy::EnemyPlugin;
+use player::PlayerPlugin;
+
 mod bullet;
 mod camera;
 mod earth;
+mod enemy;
 mod ghost;
 mod player;
-
-use crate::bullet::BulletPlugin;
-use crate::camera::MainCameraPlugin;
-use crate::earth::EarthPlugin;
-use crate::ghost::GhostPlugin;
-use crate::player::PlayerPlugin;
 
 fn main() {
     App::new()
@@ -20,7 +24,10 @@ fn main() {
         .add_plugins(MainCameraPlugin)
         .add_plugins(PlayerPlugin)
         .add_plugins(EarthPlugin)
+        .add_plugins(EnemyPlugin)
         .add_plugins(GhostPlugin)
+        .add_plugins(KnightPlugin)
+        .add_plugins(DragonPlugin)
         .add_plugins(BulletPlugin)
         .run();
 }
