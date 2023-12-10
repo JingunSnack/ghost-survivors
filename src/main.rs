@@ -36,6 +36,6 @@ fn main() {
 fn setup(mut commands: Commands) {
     commands.insert_resource(AmbientLight {
         color: Color::WHITE,
-        brightness: 0.5,
+        brightness: 1.0,
     });
 }
