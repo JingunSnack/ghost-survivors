@@ -13,7 +13,6 @@ mod bullet;
 mod camera;
 mod earth;
 mod enemy;
-mod ghost;
 mod player;
 
 fn main() {
