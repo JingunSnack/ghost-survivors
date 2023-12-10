@@ -7,6 +7,7 @@ use enemy::ghost::GhostPlugin;
 use enemy::knight::KnightPlugin;
 use enemy::EnemyPlugin;
 use player::PlayerPlugin;
+use waveform::WaveformPlugin;
 use weapon::bullet::BulletPlugin;
 use weapon::WeaponPlugin;
 
@@ -14,6 +15,7 @@ mod camera;
 mod earth;
 mod enemy;
 mod player;
+mod waveform;
 mod weapon;
 
 fn main() {
@@ -30,6 +32,7 @@ fn main() {
         .add_plugins(DragonPlugin)
         .add_plugins(WeaponPlugin)
         .add_plugins(BulletPlugin)
+        .add_plugins(WaveformPlugin)
         .run();
 }
 

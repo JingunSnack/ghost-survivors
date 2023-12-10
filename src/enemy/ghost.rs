@@ -4,6 +4,7 @@ use rand::Rng;
 use crate::earth::EARTH_RADIUS;
 use crate::enemy::Enemy;
 use crate::player::Player;
+use crate::waveform::Waveform;
 
 const MIN_DISTANCE_FROM_PLAYER: f32 = 50.0;
 const MAX_DISTANCE_FROM_PLAYER: f32 = 100.0;
@@ -69,6 +70,7 @@ fn spawn(
                     speed: GHOST_MOVEMENT_SPEED,
                     radius: GHOST_RADIUS,
                 },
+                Waveform { accumulator: 0.0 },
             ));
         }
     }
