@@ -15,8 +15,7 @@ pub struct Enemy {
 }
 
 #[derive(Component)]
-pub struct HitByBullet {
-    pub bullet_direction: Vec3,
+pub struct HitByWeapon {
     pub elapsed_time: f32,
     pub lifespan: f32,
     pub is_lethal: bool,
@@ -56,7 +55,7 @@ fn follow_player(
 
 fn hit_by_weapon(
     time: Res<Time>,
-    mut query: Query<(&mut Transform, &mut Visibility), With<HitByBullet>>,
+    mut query: Query<(&mut Transform, &mut Visibility), With<HitByWeapon>>,
 ) {
     for (mut transform, mut visibility) in query.iter_mut() {
         let forward = transform.forward();
@@ -72,13 +71,13 @@ fn hit_by_weapon(
 
 fn despawn_when_hit_by_weapon(
     mut commands: Commands,
-    mut query: Query<(Entity, &mut Visibility, &mut HitByBullet), With<HitByBullet>>,
+    mut query: Query<(Entity, &mut Visibility, &mut HitByWeapon), With<HitByWeapon>>,
     time: Res<Time>,
 ) {
     for (entity, mut visibility, mut hit_by_weapon) in &mut query {
         hit_by_weapon.elapsed_time += time.delta_seconds();
         if hit_by_weapon.elapsed_time >= hit_by_weapon.lifespan {
-            commands.entity(entity).remove::<HitByBullet>();
+            commands.entity(entity).remove::<HitByWeapon>();
             *visibility = Visibility::Visible;
             if hit_by_weapon.is_lethal {
                 commands.entity(entity).despawn_recursive();
