@@ -7,7 +7,7 @@ use crate::player::Player;
 
 const MIN_DISTANCE_FROM_PLAYER: f32 = 50.0;
 const MAX_DISTANCE_FROM_PLAYER: f32 = 100.0;
-const SPAWN_INTERVAL: u64 = 10;
+const SPAWN_INTERVAL: u64 = 30;
 
 const DRAGON_HEALTH: f32 = 5000.0;
 const DRAGON_MOVEMENT_SPEED: f32 = 50.0;
