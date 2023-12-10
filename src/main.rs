@@ -9,6 +9,7 @@ use enemy::EnemyPlugin;
 use player::PlayerPlugin;
 use waveform::WaveformPlugin;
 use weapon::bullet::BulletPlugin;
+use weapon::orbit::OrbitPlugin;
 use weapon::WeaponPlugin;
 
 mod camera;
@@ -33,6 +34,7 @@ fn main() {
         .add_plugins(WeaponPlugin)
         .add_plugins(BulletPlugin)
         .add_plugins(WaveformPlugin)
+        .add_plugins(OrbitPlugin)
         .run();
 }
 

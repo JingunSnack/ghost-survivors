@@ -3,6 +3,7 @@ use bevy::prelude::*;
 use crate::enemy::{Enemy, HitByWeapon};
 
 pub mod bullet;
+pub mod orbit;
 
 const HIT_BY_WEAPON_LIFESPAN: f32 = 0.25;
 
@@ -56,7 +57,7 @@ fn despawn(
 ) {
     for (entity, mut weapon) in &mut weapon_query {
         weapon.elapesed_time += time.delta_seconds();
-        if weapon.elapesed_time >= weapon.lifespan {
+        if weapon.lifespan >= 0.0 && weapon.elapesed_time >= weapon.lifespan {
             commands.entity(entity).despawn_recursive();
         }
     }
