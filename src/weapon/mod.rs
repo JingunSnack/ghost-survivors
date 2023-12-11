@@ -1,6 +1,8 @@
 use bevy::prelude::*;
 
 use crate::enemy::{Enemy, HitByWeapon};
+use crate::score::Score;
+use crate::GameState;
 
 pub mod bullet;
 pub mod orbit;
@@ -18,7 +20,7 @@ pub struct WeaponPlugin;
 
 impl Plugin for WeaponPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Update, hit).add_systems(Update, despawn);
+        app.add_systems(Update, (hit, despawn).run_if(in_state(GameState::Game)));
     }
 }
 
@@ -29,6 +31,7 @@ fn hit(
         (Entity, &Transform, &mut Enemy),
         (With<Enemy>, Without<Weapon>, Without<HitByWeapon>),
     >,
+    mut score: ResMut<Score>,
 ) {
     for (enemy_entity, enemy_transform, mut enemy) in &mut enemy_query {
         for (weapon, weapon_transform) in &weapon_query {
@@ -39,11 +42,18 @@ fn hit(
             {
                 enemy.health -= weapon.damage;
 
+                let is_lethal = enemy.health <= 0.0;
+
                 commands.entity(enemy_entity).insert(HitByWeapon {
                     elapsed_time: 0.0,
                     lifespan: HIT_BY_WEAPON_LIFESPAN,
-                    is_lethal: enemy.health <= 0.0,
+                    is_lethal,
                 });
+
+                if is_lethal {
+                    score.value += enemy.score;
+                }
+
                 break;
             }
         }

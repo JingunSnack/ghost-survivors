@@ -2,6 +2,7 @@ use bevy::prelude::*;
 
 use crate::player::Player;
 use crate::weapon::Weapon;
+use crate::{despawn_components, GameState};
 
 const BULLET_LIFESPAN: f32 = 10.0;
 const BULLET_MOVEMENT_SPEED: f32 = 2.5;
@@ -16,11 +17,12 @@ impl Plugin for BulletPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(
             Update,
-            spawn.run_if(bevy::time::common_conditions::on_timer(
-                std::time::Duration::from_secs(1),
+            spawn.run_if(in_state(GameState::Game).and_then(
+                bevy::time::common_conditions::on_timer(std::time::Duration::from_secs(1)),
             )),
         )
-        .add_systems(Update, translate);
+        .add_systems(Update, translate.run_if(in_state(GameState::Game)))
+        .add_systems(OnExit(GameState::GameOver), despawn_components::<Bullet>);
     }
 }
 

@@ -1,6 +1,7 @@
 use bevy::prelude::*;
 
 use crate::earth::EARTH_RADIUS;
+use crate::GameState;
 
 const PLAYER_RADIUS: f32 = 20.0;
 const PLAYER_ROTATION_SPEED: f32 = 1.0;
@@ -14,7 +15,7 @@ pub struct PlayerPlugin;
 impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Startup, spawn)
-            .add_systems(Update, movement);
+            .add_systems(Update, movement.run_if(in_state(GameState::Game)));
     }
 }
 

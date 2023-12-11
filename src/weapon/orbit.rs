@@ -2,6 +2,7 @@ use bevy::prelude::*;
 
 use crate::player::Player;
 use crate::weapon::Weapon;
+use crate::GameState;
 
 const ORBIT_DAMAGE: f32 = 100.0;
 const ORBIT_RADIUS: f32 = 25.0;
@@ -17,7 +18,7 @@ pub struct OrbitPlugin;
 impl Plugin for OrbitPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Startup, spawn)
-            .add_systems(Update, translate);
+            .add_systems(Update, translate.run_if(in_state(GameState::Game)));
     }
 }
 
@@ -40,7 +41,7 @@ fn spawn(
                 alpha_mode: AlphaMode::Blend,
                 ..default()
             }),
-            transform: Transform::from_translation(Vec3::ZERO),
+            transform: Transform::from_xyz(100000.0, 100000.0, 100000.0),
             ..default()
         },
         Orbit { angle: 0.0 },
