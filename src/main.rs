@@ -1,6 +1,7 @@
 use bevy::asset::AssetMetaCheck;
 use bevy::prelude::*;
 
+use bevy::window::WindowMode;
 use camera::MainCameraPlugin;
 use earth::EarthPlugin;
 use enemy::dragon::DragonPlugin;
@@ -39,7 +40,15 @@ fn main() {
         .insert_resource(AssetMetaCheck::Never)
         .insert_resource(ClearColor(Color::BLACK))
         .add_state::<GameState>()
-        .add_plugins(DefaultPlugins)
+        .add_plugins(DefaultPlugins.set(WindowPlugin {
+            primary_window: Some(Window {
+                mode: WindowMode::BorderlessFullscreen,
+                fit_canvas_to_parent: true,
+                resizable: false,
+                ..default()
+            }),
+            ..default()
+        }))
         .add_systems(Startup, setup)
         .add_plugins(MainCameraPlugin)
         .add_plugins(PlayerPlugin)
