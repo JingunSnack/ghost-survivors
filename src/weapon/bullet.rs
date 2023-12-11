@@ -18,7 +18,7 @@ impl Plugin for BulletPlugin {
         app.add_systems(
             Update,
             spawn.run_if(in_state(GameState::Game).and_then(
-                bevy::time::common_conditions::on_timer(std::time::Duration::from_secs(1)),
+                bevy::time::common_conditions::on_timer(std::time::Duration::from_secs(2)),
             )),
         )
         .add_systems(Update, translate.run_if(in_state(GameState::Game)))

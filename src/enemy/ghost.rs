@@ -9,9 +9,9 @@ use crate::GameState;
 
 const MIN_DISTANCE_FROM_PLAYER: f32 = 50.0;
 const MAX_DISTANCE_FROM_PLAYER: f32 = 100.0;
-const SPAWN_INTERVAL: u64 = 1;
+const SPAWN_INTERVAL: u64 = 3;
 
-const GHOST_HEALTH: f32 = 100.0;
+const GHOST_HEALTH: f32 = 200.0;
 const GHOST_MOVEMENT_SPEED: f32 = 20.0;
 const GHOST_RADIUS: f32 = 20.0;
 const GHOST_SCORE: u32 = 100;
@@ -43,7 +43,7 @@ fn spawn(
         let player_position = player_transform.translation;
         let mut rng = rand::thread_rng();
 
-        for _ in 0..5 {
+        for _ in 0..2 {
             let mut position: Vec3;
             loop {
                 let theta = rng.gen_range(0.0..std::f32::consts::PI * 2.0);
