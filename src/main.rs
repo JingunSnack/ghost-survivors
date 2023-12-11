@@ -1,3 +1,4 @@
+use bevy::asset::AssetMetaCheck;
 use bevy::prelude::*;
 
 use camera::MainCameraPlugin;
@@ -35,6 +36,7 @@ enum GameState {
 
 fn main() {
     App::new()
+        .insert_resource(AssetMetaCheck::Never)
         .insert_resource(ClearColor(Color::BLACK))
         .add_state::<GameState>()
         .add_plugins(DefaultPlugins)
